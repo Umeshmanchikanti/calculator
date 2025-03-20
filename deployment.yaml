@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: calculator-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: calculator
+  template:
+    metadata:
+      labels:
+        app: calculator
+    spec:
+      containers:
+        - name: calculator-container
+          image: your-dockerhub-username/calculator-app:latest
+          ports:
+            - containerPort: 5000
