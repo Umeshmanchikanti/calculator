@@ -36,10 +36,10 @@ pipeline {
         stage('Build and Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
+                    docker.withRegistry([credentialsId: 'docker-hub-credentials', url: 'https://index.docker.io/v1/']) {
                         sh '''
                             docker build -t ${DOCKER_REPO}:latest .
-                            docker push $DOCKER_IMAGE
+                            docker push ${DOCKER_REPO}:latest
                         '''
                     }
                 }
