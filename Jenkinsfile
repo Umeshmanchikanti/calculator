@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = "$DOCKERHUB_USERNAME/calculator-app:latest"
+        DOCKER_REPO = 'umesh1027/calculator-app'
     }
 
     stages {
@@ -37,7 +38,7 @@ pipeline {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
                         sh '''
-                            docker build -t $DOCKER_IMAGE .
+                            docker build -t ${DOCKER_REPO}:latest .
                             docker push $DOCKER_IMAGE
                         '''
                     }
