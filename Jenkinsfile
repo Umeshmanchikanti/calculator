@@ -1,13 +1,5 @@
 pipeline {
     agent any
-    
-    environment {
-        DOCKERHUB_USERNAME = credentials('dockerhub-username')
-        DOCKERHUB_PASSWORD = credentials('dockerhub-password')
-        EC2_HOST = credentials('ec2-host')
-        EC2_USER = credentials('ec2-user')
-        EC2_SSH_PRIVATE_KEY = credentials('ec2-ssh-private-key')
-    }
 
     stages {
         stage('Checkout Repository') {
