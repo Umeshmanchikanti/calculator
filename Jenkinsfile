@@ -19,7 +19,7 @@ pipeline {
         
         stage('Run Tests') {
             steps {
-                sh 'pytest'
+                sh 'PATH=$HOME/.local/bin:$PATH pytest'
             }
         }
         
