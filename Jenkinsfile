@@ -66,7 +66,7 @@ pipeline {
                         sh '''
                             chmod 600 $SSH_KEY
                             ssh -o StrictHostKeyChecking=no -i $SSH_KEY $EC2_USER@$EC2_HOST <<EOF
-                                docker login -u $DOCKERHUB_USERNAME --password-stdin < /path/to/docker-password.txt
+                                echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
                                 docker pull ${DOCKER_IMAGE}
                                 docker rm -f calculator-app || true
                                 docker run -d -p 80:5000 --name calculator-app ${DOCKER_IMAGE}
