@@ -4,6 +4,7 @@ pipeline {
     environment {
         EC2_USER = 'ec2-user'
         EC2_HOST = '54.234.110.2'
+        DOCKERHUB_USERNAME = 'umesh1027'
         DOCKER_IMAGE = "$DOCKERHUB_USERNAME/calculator-app:latest"
         DOCKER_REPO = 'umesh1027/calculator-app'
     }
@@ -65,9 +66,10 @@ pipeline {
                         sh '''
                             chmod 600 $SSH_KEY
                             ssh -o StrictHostKeyChecking=no -i $SSH_KEY $EC2_USER@$EC2_HOST <<EOF
-                            docker pull ${DOCKER_IMAGE}
-                            docker rm -f calculator-app || true
-                            docker run -d -p 80:5000 --name calculator-app ${DOCKER_IMAGE}
+                                docker login -u $DOCKERHUB_USERNAME --password-stdin < /path/to/docker-password.txt
+                                docker pull ${DOCKER_IMAGE}
+                                docker rm -f calculator-app || true
+                                docker run -d -p 80:5000 --name calculator-app ${DOCKER_IMAGE}
                             EOF
                         '''
                     }
