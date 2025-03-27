@@ -36,11 +36,13 @@ pipeline {
         stage('Build and Push Docker Image') {
             steps {
                 script {
-                    sh '''
-                        echo "${DOCKERHUB_PASSWORD}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
-                        docker build -t ${DOCKER_REPO}:latest .
-                        docker push ${DOCKER_REPO}:latest
-                    '''
+                    withCredentials([usernamePassword(credentialsId: 'DOCKERHUB_CREDENTIALS', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                        sh '''
+                            echo "${DOCKERHUB_PASSWORD}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
+                            docker build -t ${DOCKER_REPO}:latest .
+                            docker push ${DOCKER_REPO}:latest
+                        '''
+                    }
                 }
             }
         }
