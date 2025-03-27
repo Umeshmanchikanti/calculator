@@ -2,6 +2,8 @@ pipeline {
     agent any
 
     environment {
+        EC2_USER = 'ec2-user'
+        EC2_HOST = '54.234.110.2'
         DOCKER_IMAGE = "$DOCKERHUB_USERNAME/calculator-app:latest"
         DOCKER_REPO = 'umesh1027/calculator-app'
     }
