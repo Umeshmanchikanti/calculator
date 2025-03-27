@@ -36,12 +36,11 @@ pipeline {
         stage('Build and Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry([credentialsId: 'docker-hub-credentials', url: 'https://index.docker.io/v1/']) {
-                        sh '''
-                            docker build -t ${DOCKER_REPO}:latest .
-                            docker push ${DOCKER_REPO}:latest
-                        '''
-                    }
+                    sh '''
+                        echo "${DOCKERHUB_PASSWORD}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
+                        docker build -t ${DOCKER_REPO}:latest .
+                        docker push ${DOCKER_REPO}:latest
+                    '''
                 }
             }
         }
