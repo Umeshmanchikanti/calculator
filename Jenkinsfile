@@ -47,6 +47,15 @@ pipeline {
             }
         }
 
+        stage('Debugging') {
+            steps {
+                sh '''
+                    echo "EC2 User: $EC2_USER"
+                    echo "EC2 Host: $EC2_HOST"
+                '''
+            }
+        }
+
         stage('Deploy to AWS EC2') {
             steps {
                 script {
