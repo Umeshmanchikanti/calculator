@@ -53,10 +53,10 @@ pipeline {
                     withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh-private-key', keyFileVariable: 'SSH_KEY')]) {
                         sh '''
                             chmod 600 $SSH_KEY
-                            ssh -o StrictHostKeyChecking=no -i $SSH_KEY $EC2_USER@$EC2_HOST << 'EOF'
-                                docker pull $DOCKER_IMAGE
-                                docker rm -f calculator-app || true
-                                docker run -d -p 80:5000 --name calculator-app $DOCKER_IMAGE
+                            ssh -o StrictHostKeyChecking=no -i $SSH_KEY $EC2_USER@$EC2_HOST <<EOF
+                            docker pull ${DOCKER_IMAGE}
+                            docker rm -f calculator-app || true
+                            docker run -d -p 80:5000 --name calculator-app ${DOCKER_IMAGE}
                             EOF
                         '''
                     }
