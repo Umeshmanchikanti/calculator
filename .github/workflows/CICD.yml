@@ -75,6 +75,8 @@ jobs:
       - name: Set Up kubectl with Minikube
         run: |
           minikube kubectl -- config view --raw > ~/.kube/config
+          kubectl config use-context minikube
+          kubectl cluster-info
 
       - name: Apply Kubernetes Deployment
         run: |
