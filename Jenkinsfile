@@ -59,20 +59,53 @@ pipeline {
             }
         }
 
-        stage('Deploy to AWS EC2') {
+        stage('Deploy to Minikube') {
             steps {
                 script {
-                    withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh-private-key', keyFileVariable: 'SSH_KEY')]) {
-                        sh '''
-                            chmod 600 $SSH_KEY
-                            ssh -t -o StrictHostKeyChecking=no -i $SSH_KEY $EC2_USER@$EC2_HOST <<EOF
-                                echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-                                docker pull ${DOCKER_IMAGE}
-                                docker rm -f calculator-app || true
-                                docker run -d -p 80:5000 --name calculator-app ${DOCKER_IMAGE}
+                    sh '''
+                        kubectl config use-context minikube
+                        kubectl delete deployment calculator-app --ignore-not-found=true
+                        kubectl delete service calculator-service --ignore-not-found=true
+
+                        cat <<EOF | kubectl apply -f -
+                        apiVersion: apps/v1
+                        kind: Deployment
+                        metadata:
+                          name: calculator-app
+                          namespace: $KUBE_NAMESPACE
+                        spec:
+                          replicas: 1
+                          selector:
+                            matchLabels:
+                              app: calculator-app
+                          template:
+                            metadata:
+                              labels:
+                                app: calculator-app
+                            spec:
+                              containers:
+                              - name: calculator-app
+                                image: ${DOCKER_IMAGE}
+                                ports:
+                                - containerPort: 5000
                         EOF
-                        '''
-                    }
+
+                        cat <<EOF | kubectl apply -f -
+                        apiVersion: v1
+                        kind: Service
+                        metadata:
+                          name: calculator-service
+                          namespace: $KUBE_NAMESPACE
+                        spec:
+                          selector:
+                            app: calculator-app
+                          ports:
+                            - protocol: TCP
+                              port: 80
+                              targetPort: 5000
+                          type: NodePort
+                        EOF
+                    '''
                 }
             }
         }
