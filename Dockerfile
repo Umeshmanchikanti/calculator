@@ -1,17 +1,20 @@
-# Use an official Python runtime as a parent image
-FROM python:3.9
+# Optimized Dockerfile
+FROM python:3.9-slim
 
-# Set the working directory
-WORKDIR /calculator
+# Set working directory
+WORKDIR /app
 
-# Copy the current directory contents into the container
-COPY . /calculator
+# Copy only necessary files first (for caching efficiency)
+COPY requirements.txt .
 
-# Install any dependencies
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Make port 5000 available to the outside world
+# Copy the rest of the application
+COPY . .
+
+# Expose necessary ports (if needed)
 EXPOSE 5000
 
-# Define the command to run the application
+# Define the entry point
 CMD ["python", "app.py"]
