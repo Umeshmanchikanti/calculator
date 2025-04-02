@@ -7,6 +7,7 @@ pipeline {
         DOCKERHUB_USERNAME = 'umesh1027'
         DOCKER_IMAGE = "$DOCKERHUB_USERNAME/calculator-app:latest"
         DOCKER_REPO = 'umesh1027/calculator-app'
+        KUBE_NAMESPACE = "default"
     }
 
     stages {
