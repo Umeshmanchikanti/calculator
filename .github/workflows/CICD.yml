@@ -74,7 +74,8 @@ jobs:
 
       - name: Set Up kubectl with Minikube
         run: |
-          minikube kubectl -- config view --raw > ~/.kube/config
+          minikube start --driver=docker
+          minikube update-context
           kubectl config use-context minikube
           kubectl cluster-info
 
